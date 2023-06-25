@@ -10,6 +10,8 @@
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
                 <?php
+                require_once "../../../scripts/connect.php";
+
                 echo '<img src="../dist/img/avatar3.png' . $_SESSION["logged"]["logo"] . '" class="img-circle elevation-2" alt="User Image">';
                 ?>
             </div>
@@ -34,30 +36,35 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <?php
-                        require_once "../scripts/connect.php";
+                        require_once "../../../scripts/connect.php";
 
-                        $sql = "SELECT * FROM users WHERE role_id = 1;";
-                        $result = $conn->query($sql);
+                        function yourFunction($conn) {
+                            $sql = "SELECT * FROM users WHERE role_id = 1;";
+                            $result = $conn->query($sql);
 
-                        if ($result->num_rows > 0) {
-                            // Wyświetlanie uczniów
-                            while ($row = $result->fetch_assoc()) {
-                                $firstName = $row['firstName'];
-                                $lastName = $row['lastName'];
-                                $selectedUserId = $row['id'];
+                            if ($result && $result->num_rows > 0) {
+                                // Wyświetlanie uczniów
+                                while ($row = $result->fetch_assoc()) {
+                                    $firstName = $row['firstName'];
+                                    $lastName = $row['lastName'];
+                                    $selectedUserId = $row['id'];
+                                    echo '<li class="nav-item">';
+                                    echo '<a href="../pages/views/logged_nauczyciel/pojedynczy.php?userId=' . $selectedUserId . '" class="nav-link">';
+                                    echo '<i class="far fa-circle nav-icon"></i>';
+                                    echo '<p>' . $firstName . ' ' . $lastName . '</p>';
+                                    echo '</a>';
+                                    echo '</li>';
+                                }
+                            } else {
                                 echo '<li class="nav-item">';
-                                echo '<a href="../pages/views/logged_nauczyciel/pojedynczy.php?userId=' . $selectedUserId . '" class="nav-link">';
-                                echo '<i class="far fa-circle nav-icon"></i>';
-                                echo '<p>' . $firstName . ' ' . $lastName . '</p>';
-                                echo '</a>';
+                                echo '<p>Brak uczniów w bazie.</p>';
                                 echo '</li>';
                             }
-                        } else {
-                            echo '<li class="nav-item">';
-                            echo '<p>Brak uczniów w bazie.</p>';
-                            echo '</li>';
                         }
+
+                        yourFunction($conn);
                         ?>
+
                         <script>
                             function showUserDetails(userId) {
                                 window.location.href = `logged.php?userId=${userId}`;

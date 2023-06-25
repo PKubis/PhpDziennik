@@ -62,11 +62,57 @@
 	<?php
 	require_once "./views/footer.php";
 	?>
+    <?php
+    // Sprawdzenie, czy parametr selectedUserId został przekazany
+    if (isset($_GET['selectedUserId'])) {
+        // Pobranie wartości parametru selectedUserId
+        $selectedUserId = $_GET['selectedUserId'];
+
+        // Wyświetlanie pustego widoku dla wybranego użytkownika
+        echo "Widok dla użytkownika o ID: $selectedUserId";
+    } else {
+        // Wyświetlanie komunikatu o braku określonego użytkownika
+        echo "Nie znaleziono użytkownika.";
+    }
+    ?>
+    echo '<button class="btn btn-info btn-sm btn-details" data-user-id="' . $student['userId'] . '">Szczegóły</button>';
+
+
 </div>
 <!-- ./wrapper -->
 
 <!-- REQUIRED SCRIPTS -->
 <!-- jQuery -->
+<!-- Pozostała część kodu HTML w pliku logged.php -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.btn-details').click(function() {
+            var userId = $(this).data('userId');
+
+            // Wykonaj żądanie AJAX, aby pobrać szczegółowe informacje o użytkowniku
+            $.ajax({
+                url: 'pojedynczy.php',
+                method: 'GET',
+                data: { userId: userId },
+                success: function(response) {
+                    // Wyświetl pobrane szczegółowe informacje o użytkowniku
+                    $('#user-details').html(response);
+                },
+                error: function() {
+                    // Wyświetl komunikat błędu, jeśli wystąpił problem z pobraniem danych
+                    $('#user-details').html('Wystąpił błąd podczas pobierania informacji o użytkowniku.');
+                }
+            });
+        });
+    });
+</script>
+
+
+</body>
+</html>
+
 <script src="../plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap -->
 <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>

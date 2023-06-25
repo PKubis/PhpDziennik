@@ -20,6 +20,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $ocena_odpowiedzi = $_POST['ocena_odpowiedzi'];
     $email = $_POST['email'];
 
+    // Sprawdzenie czy wprowadzone oceny mieszczą się w przedziale od 1 do 6
+    if ($ocena_kartkowki < 1 || $ocena_kartkowki > 6 || $ocena_sprawdzianu < 1 || $ocena_sprawdzianu > 6 || $ocena_odpowiedzi < 1 || $ocena_odpowiedzi > 6) {
+        $_SESSION['error'] = "Wprowadź oceny w przedziale od 1 do 6.";
+        header("location: ../pages/logged.php");
+        exit();
+    }
+
     // Aktualizacja użytkownika w bazie danych
     $updateUserSql = "UPDATE users
                       SET firstName='$firstName', lastName='$lastName', email='$email'

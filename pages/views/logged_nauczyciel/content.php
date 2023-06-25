@@ -31,6 +31,7 @@
                                 <div class="card-header">
                                     <h3 class="card-title">Oceny</h3>
                                 </div>
+
                                 <!-- /.card-header -->
                                 <table class="card-body">
                                     <!doctype html>
@@ -135,11 +136,11 @@ ADDUSERFORM;
  } else if (isset($_GET["userIdUpdate"])) {
                                         $userId = $_GET["userIdUpdate"];
                                         $sql = "SELECT u.*, k.ocena AS ocena_kartkowki, s.ocena AS ocena_sprawdzianu, o.ocena AS ocena_odpowiedzi
-            FROM users AS u
-            LEFT JOIN kartkowka AS k ON u.id = k.user_id
-            LEFT JOIN sprawdzian AS s ON u.id = s.user_id
-            LEFT JOIN odpowiedz AS o ON u.id = o.user_id
-            WHERE u.id=$userId";
+        FROM users AS u
+        LEFT JOIN kartkowka AS k ON u.id = k.user_id AND k.ocena BETWEEN 1 AND 6
+        LEFT JOIN sprawdzian AS s ON u.id = s.user_id AND s.ocena BETWEEN 1 AND 6
+        LEFT JOIN odpowiedz AS o ON u.id = o.user_id AND o.ocena BETWEEN 1 AND 6
+        WHERE u.id = $userId";
                                         $result = $conn->query($sql);
                                         $user = $result->fetch_assoc();
 
@@ -192,8 +193,20 @@ EDITUSERFORM;
 
                                         // Funkcja do aktualizacji użytkownika
                                         function updateUser() {
-                                            alert("Użytkownik został zaktualizowany!");
-                                            window.location.href = `../pages/logged.php?userIdUpdate`;
+                                            var ocena_kartkowki = document.getElementsByName("ocena_kartkowki")[0].value;
+                                            var ocena_sprawdzianu = document.getElementsByName("ocena_sprawdzianu")[0].value;
+                                            var ocena_odpowiedzi = document.getElementsByName("ocena_odpowiedzi")[0].value;
+
+                                            if (ocena_kartkowki >= 1 && ocena_kartkowki <= 6 &&
+                                                ocena_sprawdzianu >= 1 && ocena_sprawdzianu <= 6 &&
+                                                ocena_odpowiedzi >= 1 && ocena_odpowiedzi <= 6) {
+                                                alert("Użytkownik został zaktualizowany!");
+                                                window.location.href = `../pages/logged.php?userIdUpdate`;
+                                            } else {
+                                                alert("Błąd aktualizacji: Wprowadzona ocena musi być w przedziale od 1 do 6.");
+                                                window.location.href = `../pages/logged.php`;
+                                            }
+
                                         }
                                     </script>
 
