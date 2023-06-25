@@ -56,6 +56,7 @@
 	<?php
 	require_once "./views/$role/content.php";
 	?>
+
   <!-- /.content-wrapper -->
 
   <!-- Main Footer -->
