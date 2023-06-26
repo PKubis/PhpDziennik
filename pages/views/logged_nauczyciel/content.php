@@ -135,12 +135,14 @@ ADDUSERFORM;
 
  } else if (isset($_GET["userIdUpdate"])) {
                                         $userId = $_GET["userIdUpdate"];
-                                        $sql = "SELECT u.*, k.ocena AS ocena_kartkowki, s.ocena AS ocena_sprawdzianu, o.ocena AS ocena_odpowiedzi
+                                        $sql = "SELECT u.*, k.ocena AS ocena_kartkowki, s.ocena AS ocena_sprawdzianu, o.ocena AS ocena_odpowiedzi,
+        k.data_modyfikacji AS data_modyfikacji_kartkowka, s.data_modyfikacji AS data_modyfikacji_sprawdzian, o.data_modyfikacji AS data_modyfikacji_odpowiedz
         FROM users AS u
         LEFT JOIN kartkowka AS k ON u.id = k.user_id AND k.ocena BETWEEN 1 AND 6
         LEFT JOIN sprawdzian AS s ON u.id = s.user_id AND s.ocena BETWEEN 1 AND 6
         LEFT JOIN odpowiedz AS o ON u.id = o.user_id AND o.ocena BETWEEN 1 AND 6
         WHERE u.id = $userId";
+
                                         $result = $conn->query($sql);
                                         $user = $result->fetch_assoc();
 

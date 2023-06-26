@@ -11,6 +11,19 @@ foreach ($_POST as $key => $value) {
 
 require_once '../scripts/connect.php';
 
+
+session_start();
+
+foreach ($_POST as $key => $value) {
+    if (empty($value)) {
+        echo "<script>history.back();</script>";
+        $_SESSION['error'] = "Wypełnij wszystkie pola, np. $key";
+        exit();
+    }
+}
+
+require_once '../scripts/connect.php';
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $userId = $_POST['userId'];
     $firstName = $_POST['imie'];
@@ -28,26 +41,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Aktualizacja użytkownika w bazie danych
-    $updateUserSql = "UPDATE users
-                      SET firstName='$firstName', lastName='$lastName', email='$email'
-                      WHERE id=$userId";
+    $updateUserSql = "UPDATE users SET firstName = '$firstName', lastName = '$lastName', email = '$email' WHERE id = $userId";
     if ($conn->query($updateUserSql) === TRUE) {
         // Aktualizacja oceny kartkówki
-        $updateKartkowkaSql = "UPDATE kartkowka
-                               SET ocena=$ocena_kartkowki
-                               WHERE user_id=$userId";
+        $updateKartkowkaSql = "UPDATE kartkowka SET ocena = '$ocena_kartkowki', data_modyfikacji = NOW() WHERE user_id = $userId";
         $conn->query($updateKartkowkaSql);
 
         // Aktualizacja oceny sprawdzianu
-        $updateSprawdzianSql = "UPDATE sprawdzian
-                                SET ocena=$ocena_sprawdzianu
-                                WHERE user_id=$userId";
+        $updateSprawdzianSql = "UPDATE sprawdzian SET ocena = '$ocena_sprawdzianu', data_modyfikacji = NOW() WHERE user_id = $userId";
         $conn->query($updateSprawdzianSql);
 
         // Aktualizacja oceny odpowiedzi
-        $updateOdpowiedzSql = "UPDATE odpowiedz
-                               SET ocena=$ocena_odpowiedzi
-                               WHERE user_id=$userId";
+        $updateOdpowiedzSql = "UPDATE odpowiedz SET ocena = '$ocena_odpowiedzi', data_modyfikacji = NOW() WHERE user_id = $userId";
         $conn->query($updateOdpowiedzSql);
 
         $_SESSION['success'] = "Użytkownik został zaktualizowany.";
@@ -59,4 +64,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     header("location: ../pages/logged.php");
     exit();
 }
-?>
+
