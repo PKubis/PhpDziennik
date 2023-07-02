@@ -116,14 +116,14 @@
         </head>
         <body>
         <h4>Podgląd ucznia</h4>
-    <?php
-    require_once "../../../scripts/connect.php";
+        <?php
+        require_once "../../../scripts/connect.php";
 
-    // Pobierz dane użytkownika tylko wtedy, gdy przekazano userId
-    if (isset($_GET['userId'])) {
-        $userId = $_GET['userId'];
+        // Pobierz dane użytkownika tylko wtedy, gdy przekazano userId
+        if (isset($_GET['userId'])) {
+            $userId = $_GET['userId'];
 
-        $sql = "SELECT
+            $sql = "SELECT
                 u.id,
                 u.firstName AS imie,
                 u.lastName AS nazwisko,
@@ -144,65 +144,65 @@
                 odpowiedz AS o ON u.id = o.user_id
             WHERE
                 u.id = $userId";
-        $result = $conn->query($sql);
+            $result = $conn->query($sql);
 
-        if ($result->num_rows == 1) {
-            $user = $result->fetch_assoc();
-            // Zaktualizuj tabelę tylko dla wybranego użytkownika
-            echo "<tr>";
-            echo "<th>Imię</th>";
-            echo "<th>Nazwisko</th>";
-            echo "<th>Email</th>";
-            echo "<th>Kartkówka</th>";
-            echo "<th>Wystawiona</th>";
-            echo "<th>Sprawdzian</th>";
-            echo "<th>Wystawiona</th>";
-            echo "<th>Odpowiedź</th>";
-            echo "<th>Wystawiona</th>";
+            if ($result->num_rows == 1) {
+                $user = $result->fetch_assoc();
+                // Zaktualizuj tabelę tylko dla wybranego użytkownika
+                echo "<tr>";
+                echo "<th>Imię</th>";
+                echo "<th>Nazwisko</th>";
+                echo "<th>Email</th>";
+                echo "<th>Kartkówka</th>";
+                echo "<th>Wystawiona</th>";
+                echo "<th>Sprawdzian</th>";
+                echo "<th>Wystawiona</th>";
+                echo "<th>Odpowiedź</th>";
+                echo "<th>Wystawiona</th>";
 
-            echo "</tr>";
-            echo "<tr>";
-            echo "<td>" . $user['imie'] . "</td>";
-            echo "<td>" . $user['nazwisko'] . "</td>";
-            echo "<td>" . $user['email'] . "</td>";
-            echo "<td>" . $user['ocena_kartkowki'] . "</td>";
-            echo "<td>" . $user['data_kartkowki'] . "</td>";
-            echo "<td>" . $user['ocena_sprawdzianu'] . "</td>";
-            echo "<td>" . $user['data_sprawdzianu'] . "</td>";
-            echo "<td>" . $user['ocena_odpowiedzi'] . "</td>";
-            echo "<td>" . $user['data_odpowiedzi'] . "</td>";
-            echo "</tr>";
-        } else {
-            echo "<tr><td colspan='9'>Brak rekordów do wyświetlenia</td></tr>";
+                echo "</tr>";
+                echo "<tr>";
+                echo "<td>" . $user['imie'] . "</td>";
+                echo "<td>" . $user['nazwisko'] . "</td>";
+                echo "<td>" . $user['email'] . "</td>";
+                echo "<td>" . $user['ocena_kartkowki'] . "</td>";
+                echo "<td>" . $user['data_kartkowki'] . "</td>";
+                echo "<td>" . $user['ocena_sprawdzianu'] . "</td>";
+                echo "<td>" . $user['data_sprawdzianu'] . "</td>";
+                echo "<td>" . $user['ocena_odpowiedzi'] . "</td>";
+                echo "<td>" . $user['data_odpowiedzi'] . "</td>";
+                echo "</tr>";
+            } else {
+                echo "<tr><td colspan='9'>Brak rekordów do wyświetlenia</td></tr>";
+            }
         }
-    }
-    ?>
-</table>
+        ?>
+        </table>
         <?php
-if (isset($_GET["userIdUpdate"])) {
-    $userId = $_GET["userIdUpdate"];
-    $sql = "SELECT u.*, k.ocena AS ocena_kartkowki, s.ocena AS ocena_sprawdzianu, o.ocena AS ocena_odpowiedzi
+        if (isset($_GET["userIdUpdate"])) {
+            $userId = $_GET["userIdUpdate"];
+            $sql = "SELECT u.*, k.ocena AS ocena_kartkowki, s.ocena AS ocena_sprawdzianu, o.ocena AS ocena_odpowiedzi
         FROM users AS u
         LEFT JOIN kartkowka AS k ON u.id = k.user_id AND k.ocena BETWEEN 1 AND 6
         LEFT JOIN sprawdzian AS s ON u.id = s.user_id AND s.ocena BETWEEN 1 AND 6
         LEFT JOIN odpowiedz AS o ON u.id = o.user_id AND o.ocena BETWEEN 1 AND 6
         WHERE u.id = $userId";
-    $result = $conn->query($sql);
-    $user = $result->fetch_assoc();
+            $result = $conn->query($sql);
+            $user = $result->fetch_assoc();
 
-    echo <<< EDITUSERFORM
+            echo <<< EDITUSERFORM
         <h4>Aktualizacja użytkownika</h4><form action="../scripts/update_user.php?userIdUpdate=$userId" method="post">
         <input type="hidden" name="userId" value="$userId">
-        <input type="text" name="imie" placeholder="Podaj imię" value="{$user['firstName']}" autofocus><br><br>
-        <input type="text" name="nazwisko" placeholder="Podaj nazwisko" value="{$user['lastName']}"><br><br>
-        <input type="text" name="ocena_kartkowki" placeholder="Podaj ocenę kartkówki" value="{$user['ocena_kartkowki']}"><br><br>
+        <input type="text" name="imie" placeholder="Podaj imię" value="{$user['firstName']}" readonly><br><br>
+        <input type="text" name="nazwisko" placeholder="Podaj nazwisko" value="{$user['lastName']}" readonly><br><br>
+        <input type="text" name="ocena_kartkowki" placeholder="Podaj ocenę kartkówki" value="{$user['ocena_kartkowki']}" autofocus><br><br>
         <input type="text" name="ocena_sprawdzianu" placeholder="Podaj ocenę sprawdzianu" value="{$user['ocena_sprawdzianu']}"><br><br>
         <input type="text" name="ocena_odpowiedzi" placeholder="Podaj ocenę odpowiedzi" value="{$user['ocena_odpowiedzi']}"><br><br>
-        <input type="email" name="email" placeholder="Podaj adres e-mail" value="{$user['email']}"><br><br>
+        <input type="email" name="email" placeholder="Podaj adres e-mail" value="{$user['email']}" readonly><br><br>
         <input type="submit" value="Aktualizuj użytkownika" onclick="updateUser()"></form>
         EDITUSERFORM;
-}else {
-}
+        }else {
+        }
 
         $conn->close();
         ?><script>
@@ -246,17 +246,17 @@ if (isset($_GET["userIdUpdate"])) {
 
                     <div class="form-group">
                         <label for="imie">Imię:</label>
-                        <input type="text" class="form-control" name="imie" id="imie" value="<?php echo $user['imie']; ?>">
+                        <input type="text" class="form-control" name="imie" id="imie" value="<?php echo $user['imie']; ?>" readonly>
                     </div>
 
                     <div class="form-group">
                         <label for="nazwisko">Nazwisko:</label>
-                        <input type="text" class="form-control" name="nazwisko" id="nazwisko" value="<?php echo $user['nazwisko']; ?>">
+                        <input type="text" class="form-control" name="nazwisko" id="nazwisko" value="<?php echo $user['nazwisko']; ?>" readonly>
                     </div>
 
                     <div class="form-group">
                         <label for="ocena_kartkowki">Ocena kartkówki:</label>
-                        <input type="number" class="form-control" name="ocena_kartkowki" id="ocena_kartkowki" min="1" max="6" value="<?php echo $user['ocena_kartkowki']; ?>">
+                        <input type="number" class="form-control" name="ocena_kartkowki" id="ocena_kartkowki" min="1" max="6" value="<?php echo $user['ocena_kartkowki']; ?>" autofocus>
                     </div>
 
                     <div class="form-group">
@@ -271,7 +271,7 @@ if (isset($_GET["userIdUpdate"])) {
 
                     <div class="form-group">
                         <label for="email">Email:</label>
-                        <input type="email" class="form-control" name="email" id="email" value="<?php echo $user['email']; ?>">
+                        <input type="email" class="form-control" name="email" id="email" value="<?php echo $user['email']; ?>" readonly>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Aktualizuj użytkownika</button>
@@ -282,66 +282,66 @@ if (isset($_GET["userIdUpdate"])) {
 
 
 
-</body>
-</html>
+    </body>
+    </html>
 
-        <?php
-        require_once "../footer.php";
-        ?>
+    <?php
+    require_once "../footer.php";
+    ?>
 
-    </div>
-    <!-- ./wrapper -->
+</div>
+<!-- ./wrapper -->
 
-    <!-- REQUIRED SCRIPTS -->
-    <!-- jQuery -->
-    <script src="../../../plugins/jquery/jquery.min.js"></script>
-    <!-- Bootstrap -->
-    <script src="../../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- overlayScrollbars -->
-    <script src="../../../plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-    <!-- AdminLTE App -->
-    <script src="../../../dist/js/adminlte.js"></script>
+<!-- REQUIRED SCRIPTS -->
+<!-- jQuery -->
+<script src="../../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="../../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- overlayScrollbars -->
+<script src="../../../plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../../dist/js/adminlte.js"></script>
 
-    <!-- Ajax script -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('.btn-details').click(function () {
-                var userId = $(this).data('userId');
+<!-- Ajax script -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.btn-details').click(function () {
+            var userId = $(this).data('userId');
 
-                // Wykonaj żądanie AJAX, aby pobrać szczegółowe informacje o użytkowniku
-                $.ajax({
-                    url: 'pojedynczy.php',
-                    method: 'GET',
-                    data: {
-                        userId: userId
-                    },
-                    success: function (response) {
-                        // Wyświetl pobrane szczegółowe informacje o użytkowniku
-                        $('#user-details').html(response);
-                    },
-                    error: function () {
-                        // Wyświetl komunikat błędu, jeśli wystąpił problem z pobraniem danych
-                        $('#user-details').html('Wystąpił błąd podczas pobierania informacji o użytkowniku.');
-                    }
-                });
+            // Wykonaj żądanie AJAX, aby pobrać szczegółowe informacje o użytkowniku
+            $.ajax({
+                url: 'pojedynczy.php',
+                method: 'GET',
+                data: {
+                    userId: userId
+                },
+                success: function (response) {
+                    // Wyświetl pobrane szczegółowe informacje o użytkowniku
+                    $('#user-details').html(response);
+                },
+                error: function () {
+                    // Wyświetl komunikat błędu, jeśli wystąpił problem z pobraniem danych
+                    $('#user-details').html('Wystąpił błąd podczas pobierania informacji o użytkowniku.');
+                }
             });
         });
-    </script>
+    });
+</script>
 
-    <!-- PAGE PLUGINS -->
-    <!-- jQuery Mapael -->
-    <script src="../../../plugins/jquery-mousewheel/jquery.mousewheel.js"></script>
-    <script src="../../../plugins/raphael/raphael.min.js"></script>
-    <script src="../../../plugins/jquery-mapael/jquery.mapael.min.js"></script>
-    <script src="../../../plugins/jquery-mapael/maps/usa_states.min.js"></script>
-    <!-- ChartJS -->
-    <script src="../../../plugins/chart.js/Chart.min.js"></script>
+<!-- PAGE PLUGINS -->
+<!-- jQuery Mapael -->
+<script src="../../../plugins/jquery-mousewheel/jquery.mousewheel.js"></script>
+<script src="../../../plugins/raphael/raphael.min.js"></script>
+<script src="../../../plugins/jquery-mapael/jquery.mapael.min.js"></script>
+<script src="../../../plugins/jquery-mapael/maps/usa_states.min.js"></script>
+<!-- ChartJS -->
+<script src="../../../plugins/chart.js/Chart.min.js"></script>
 
-    <!-- AdminLTE for demo purposes -->
-    <script src="../../../dist/js/demo.js"></script>
-    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-    <script src="../../../dist/js/pages/dashboard2.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="../../../dist/js/demo.js"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="../../../dist/js/pages/dashboard2.js"></script>
 </div>
 </div>
 </div>
