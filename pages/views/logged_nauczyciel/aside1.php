@@ -16,7 +16,7 @@
                 ?>
             </div>
             <div class="info">
-                <a href="#" class="d-block"><?php echo $_SESSION["logged"]["firstName"] . " " . $_SESSION["logged"]["lastName"] ?></a>
+                <span href="#" class="d-block"><?php echo $_SESSION["logged"]["firstName"] . " " . $_SESSION["logged"]["lastName"] ?></span>
             </div>
         </div>
 

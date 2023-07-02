@@ -15,6 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $userId = $_POST['userId'];
     $firstName = $_POST['imie'];
     $lastName = $_POST['nazwisko'];
+    $role = $_POST['role'];
     $ocena_kartkowki = $_POST['ocena_kartkowki'];
     $ocena_sprawdzianu = $_POST['ocena_sprawdzianu'];
     $ocena_odpowiedzi = $_POST['ocena_odpowiedzi'];
@@ -29,24 +30,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Aktualizacja użytkownika w bazie danych
     $updateUserSql = "UPDATE users
-                      SET firstName='$firstName', lastName='$lastName', email='$email' 
+                      SET firstName='$firstName', lastName='$lastName', email='$email', role_id='$role'
                       WHERE id=$userId";
     if ($conn->query($updateUserSql) === TRUE) {
         // Aktualizacja oceny kartkówki
         $updateKartkowkaSql = "UPDATE kartkowka
-                               SET ocena=$ocena_kartkowki, data_modyfikacji=NOW()
+                               SET ocena=$ocena_kartkowki
                                WHERE user_id=$userId";
         $conn->query($updateKartkowkaSql);
 
         // Aktualizacja oceny sprawdzianu
         $updateSprawdzianSql = "UPDATE sprawdzian
-                                SET ocena=$ocena_sprawdzianu, data_modyfikacji=NOW()
+                                SET ocena=$ocena_sprawdzianu
                                 WHERE user_id=$userId";
         $conn->query($updateSprawdzianSql);
 
         // Aktualizacja oceny odpowiedzi
         $updateOdpowiedzSql = "UPDATE odpowiedz
-                               SET ocena=$ocena_odpowiedzi, data_modyfikacji=NOW()
+                               SET ocena=$ocena_odpowiedzi
                                WHERE user_id=$userId";
         $conn->query($updateOdpowiedzSql);
 

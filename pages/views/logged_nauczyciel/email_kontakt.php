@@ -7,22 +7,22 @@ require '../../../vendor/PHPMailer-master/src/SMTP.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-// Pobierz dane użytkowników z bazy danych
-$sql = "SELECT firstName, lastName, email FROM users";
-$result = $conn->query($sql);
+// Połączenie z bazą danych (tu należy dodać kod połączenia z bazą danych, np. przy użyciu PDO)
 
-if ($result && $result->num_rows > 0) {
-    echo "<table>";
-    echo "<tr><th>Imię</th><th>Nazwisko</th><th>Email</th></tr>";
-    while ($row = $result->fetch_assoc()) {
-        $firstName = $row['firstName'];
-        $lastName = $row['lastName'];
-        $email = $row['email'];
-        echo "<tr><td>$firstName</td><td>$lastName</td><td>$email</td></tr>";
+$recipientEmail = '';
+$recipientId = $_POST['recipient'] ?? '';
+
+if (!empty($recipientId)) {
+    // Pobierz użytkownika z bazy danych na podstawie ID
+    $sql = "SELECT firstName, lastName, email FROM users WHERE id = :recipientId";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':recipientId', $recipientId);
+    $stmt->execute();
+
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($row) {
+        $recipientEmail = $row['email'];
     }
-    echo "</table>";
-} else {
-    echo "Brak danych użytkowników.";
 }
 
 if (isset($_POST['submit'])) {
@@ -64,13 +64,17 @@ if (isset($_POST['submit'])) {
         <div class="form-group">
             <label for="recipient">Odbiorca:</label>
             <select class="form-control" id="recipient" name="recipient" required>
+                <option value="">Wybierz odbiorcę</option>
                 <?php
-                $result->data_seek(0); // Przejdź na początek wyników zapytania
-                while ($row = $result->fetch_assoc()) {
+                // Pobierz wszystkich użytkowników z bazy danych
+                $sql = "SELECT id, firstName, lastName, email FROM users";
+                $stmt = $pdo->query($sql);
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    $userId = $row['id'];
                     $firstName = $row['firstName'];
                     $lastName = $row['lastName'];
                     $email = $row['email'];
-                    echo "<option value=\"$email\">$firstName $lastName ($email)</option>";
+                    echo "<option value='$userId'>$firstName $lastName ($email)</option>";
                 }
                 ?>
             </select>

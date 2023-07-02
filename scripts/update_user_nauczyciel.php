@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     $conn->close();
-    header("location: ../pages/logged.php");
+    header("location: /../../dziennik23/dzienniklekcyjny-master/pages/views/logged_nauczyciel/pojedynczy.php?userId=${userId}");
     exit();
 }
 ?>

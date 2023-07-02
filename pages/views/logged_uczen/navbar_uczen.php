@@ -2,30 +2,26 @@
 	<!-- Left navbar links -->
 	<ul class="navbar-nav">
 		<li class="nav-item">
-			<a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+			<a class="nav-link" data-widget="pushmenu" href="#" role="button">
+				<i class="fas fa-bars"></i>
+			</a>
 		</li>
 		<li class="nav-item d-none d-sm-inline-block">
-			<a href="logged.php" class="nav-link">Home</a>
+			<a href="../../logged.php" class="nav-link">Home</a>
 		</li>
 		<li class="nav-item d-none d-sm-inline-block">
-			<a href="/views/logged_nauczyciel/" class="nav-link">Kontakt</a>
+			<a href="../logged_uczen/kontakt_uczen.php" class="nav-link">Kontakt</a>
 		</li>
 		<li class="nav-item d-none d-sm-inline-block">
-			<a href="/../../scripts/logout.php" class="nav-link">Wyloguj</a>
+			<a href="../../../scripts/logout.php" class="nav-link">Wyloguj</a>
 		</li>
 	</ul>
-
 	<!-- Right navbar links -->
 	<ul class="navbar-nav ml-auto">
 		<!-- Navbar Search -->
-
-
 		<!-- Messages Dropdown Menu -->
-
-
 		<!-- Notifications Dropdown Menu -->
-
-			</a>
+		</a>
 		</li>
 	</ul>
 </nav>

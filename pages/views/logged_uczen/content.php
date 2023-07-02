@@ -29,7 +29,7 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 class="card-title">Oceny</h3>
+                                    <h3 class="card-title">Podgląd</h3>
                                 </div>
                                 <!-- /.card-header -->
                                 <table class="card-body">
@@ -46,51 +46,73 @@
                                     <?php
                                     require_once "../scripts/connect.php";
 
-                                    // Pobranie ID użytkownika
-                                    $userID = 9;
+                                    if (isset($_POST['userId'])) {
+                                        $userId = $_POST['userId'];
 
-                                    $sql = "SELECT * FROM wszystko WHERE user_id = $userID";
-
+                                    $sql = "SELECT\n"
+                                        . "  u.id,\n"
+                                        . "  u.firstName AS imie,\n"
+                                        . "  u.lastName AS nazwisko,\n"
+                                        . "  u.email,\n"
+                                        . "  k.ocena AS ocena_kartkowki,\n"
+                                        . "  s.ocena AS ocena_sprawdzianu,\n"
+                                        . "  o.ocena AS ocena_odpowiedzi,\n"
+                                        . "  ROUND((COALESCE(k.ocena, 0) + COALESCE(s.ocena, 0) + COALESCE(o.ocena, 0)) / (\n"
+                                        . "    CASE WHEN k.ocena IS NULL THEN 0 ELSE 1 END +\n"
+                                        . "    CASE WHEN s.ocena IS NULL THEN 0 ELSE 1 END +\n"
+                                        . "    CASE WHEN o.ocena IS NULL THEN 0 ELSE 1 END\n"
+                                        . "  ), 1) AS srednia_ocen\n"
+                                        . "FROM\n"
+                                        . "  users AS u\n"
+                                        . "LEFT JOIN\n"
+                                        . "  kartkowka AS k ON u.id = k.user_id\n"
+                                        . "LEFT JOIN\n"
+                                        . "  sprawdzian AS s ON u.id = s.user_id\n"
+                                        . "LEFT JOIN\n"
+                                        . "  odpowiedz AS o ON u.id = o.user_id\n"
+                                        . "WHERE\n"
+                                        . "  u.id = $userId;";
                                     $result = $conn->query($sql);
-
-                                    if ($result->num_rows > 0) {
-                                        while ($row = $result->fetch_assoc()) {
-                                            $firstName = $row['firstName'];
-                                            $lastName = $row['lastName'];
-                                            $kartkowka = $row['kartkowka'];
-                                            $sprawdzian = $row['sprawdzian'];
-                                            $odpowiedz = $row['odpowiedz'];
-                                            $srednia = $row['srednia'];
-                                            $userId = $row['user_id'];
-
+                                    if ($result->num_rows == 0) {
+                                        echo "<tr><td colspan='8'>Brak rekordów do wyświetlenia</td></tr>";
+                                    } else {
+                                        while ($user = $result->fetch_assoc()) {
                                             echo "<tr>";
-                                            echo "<td>$firstName</td>";
-                                            echo "<td>$lastName</td>";
-                                            echo "<td>$kartkowka</td>";
-                                            echo "<td>$sprawdzian</td>";
-                                            echo "<td>$odpowiedz</td>";
-                                            echo "<td>$srednia</td>";
+                                            echo "<td>" . $user['imie'] . "</td>";
+                                            echo "<td>" . $user['nazwisko'] . "</td>";
+                                            echo "<td>" . (isset($user['ocena_kartkowki']) ? $user['ocena_kartkowki'] : "") . "</td>";
+                                            echo "<td>" . (isset($user['ocena_sprawdzianu']) ? $user['ocena_sprawdzianu'] : "") . "</td>";
+                                            echo "<td>" . (isset($user['ocena_odpowiedzi']) ? $user['ocena_odpowiedzi'] : "") . "</td>";
+                                            echo "<td>" . $user['srednia_ocen'] . "</td>";
+                                            echo "<td>" . $user['email'] . "</td>";
+                                            echo "<td><button class='delete-button' data-user-id='" . $user['id'] . "'>Usuń</button></td>";
+                                            echo "<td><button class='edit-button' data-user-id='" . $user['id'] . "' onclick='openEditUserForm(" . $user['id'] . ")'>Aktualizuj</button></td>";
                                             echo "</tr>";
                                         }
-                                    } else {
-                                        echo "Brak danych do wyświetlenia.";
-                                    }
-
-                                    $conn->close();
+                                    }}
                                     ?>
 
-
-
+                                    <!-- Formularz do wprowadzania ID użytkownika -->
+                                    <form method="POST">
+                                        <label for="userId">ID użytkownika:</label>
+                                        <input type="text" name="userId" id="userId">
+                                        <button type="submit">Pokaż oceny</button>
+                                    </form>
                                 </table>
+                                <!-- /.card-body -->
                             </div>
-                            <!-- /.card-body -->
+                            <!-- /.card -->
                         </div>
-
-
-
-
-
-
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.container-fluid -->
             </section>
             <!-- /.content -->
         </div>
+        <!-- /.content-wrapper -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
