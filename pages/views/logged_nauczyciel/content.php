@@ -105,7 +105,6 @@
                                                 echo "<td>" . (isset($user['ocena_odpowiedzi']) ? $user['ocena_odpowiedzi'] : "") . "</td>";
                                                 echo "<td>" . $user['srednia_ocen'] . "</td>";
                                                 echo "<td>" . $user['email'] . "</td>";
-                                                echo "<td><button class='delete-button' data-user-id='" . $user['id'] . "'>Usuń</button></td>";
                                                 echo "<td><button class='edit-button' data-user-id='" . $user['id'] . "' onclick='openEditUserForm(" . $user['id'] . ")'>Aktualizuj</button></td>";
                                                 echo "</tr>";
                                             }
@@ -130,7 +129,7 @@ ADDUSERFORM;
                                         $user = $result->fetch_assoc();
 
                                         echo <<< EDITUSERFORM
-        <h4>Aktualizacja użytkownika</h4><form action="../scripts/update_user.php?userIdUpdate=$userId" method="post"><input type="hidden" name="userId" value="$userId"><input type="text" name="imie" placeholder="Podaj imię" value="{$user['firstName']}" autofocus><br><br><input type="text" name="nazwisko" placeholder="Podaj nazwisko" value="{$user['lastName']}"><br><br><input type="text" name="ocena_kartkowki" placeholder="Podaj ocenę kartkówki" value="{$user['ocena_kartkowki']}"><br><br><input type="text" name="ocena_sprawdzianu" placeholder="Podaj ocenę sprawdzianu" value="{$user['ocena_sprawdzianu']}"><br><br><input type="text" name="ocena_odpowiedzi" placeholder="Podaj ocenę odpowiedzi" value="{$user['ocena_odpowiedzi']}"><br><br><input type="email" name="email" placeholder="Podaj adres e-mail" value="{$user['email']}"><br><br><input type="submit" value="Aktualizuj użytkownika" onclick="updateUser()"></form>
+        <h4>Aktualizacja użytkownika</h4><form action="../scripts/update_user.php?userIdUpdate=$userId" method="post"><input type="hidden" name="userId" value="$userId"><input type="text" name="imie" placeholder="Podaj imię" value="{$user['firstName']}" readonly><br><br><input type="text" name="nazwisko" placeholder="Podaj nazwisko" value="{$user['lastName']}" readonly><br><br><input type="text" name="ocena_kartkowki" placeholder="Podaj ocenę kartkówki" value="{$user['ocena_kartkowki']}" autofocus><br><br><input type="text" name="ocena_sprawdzianu" placeholder="Podaj ocenę sprawdzianu" value="{$user['ocena_sprawdzianu']}"><br><br><input type="text" name="ocena_odpowiedzi" placeholder="Podaj ocenę odpowiedzi" value="{$user['ocena_odpowiedzi']}"><br><br><input type="email" name="email" placeholder="Podaj adres e-mail" value="{$user['email']}" readonly><br><br><input type="submit" value="Aktualizuj użytkownika" onclick="updateUser()"></form>
         
 EDITUSERFORM;
                                     }else {

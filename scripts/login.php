@@ -28,6 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
 			$_SESSION["logged"]["lastName"] = $user["lastName"];
 			$_SESSION["logged"]["logged_in"] = true;
 			$_SESSION["logged"]["role_id"] = $user["role_id"];
+            $_SESSION["logged"]["userId"] = $user["id"];
 			//session_regenerate_id();
 			$_SESSION["logged"]["session_id"] = session_id();
 			//echo session_id();

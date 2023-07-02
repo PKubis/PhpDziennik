@@ -1,139 +1,149 @@
-<?php
-session_start();
-if (!isset($_SESSION["logged"]) || $_SESSION["logged"]["session_id"] != session_id() || session_status() != 2){
-    $_SESSION["error"] = "Zaloguj się!";
-    header("location: ./");
-}else{
-    switch ($_SESSION["logged"]["role_id"]){
-        case 1:
-            $role = "logged_uczen";
-            break;
-        case 2:
-            $role = "logged_nauczyciel";
-            break;
-        case 3:
-            $role = "logged_admin";
-            break;
-    }
-}
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AdminLTE 3 | Dashboard 2</title>
-
-    <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="../plugins/fontawesome-free/css/all.min.css">
-    <!-- overlayScrollbars -->
-    <link rel="stylesheet" href="../plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="../dist/css/adminlte.min.css">
-</head>
-<body class="hold-transition dark-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
-<div class="wrapper">
-
-    <!-- Preloader -->
-    <div class="preloader flex-column justify-content-center align-items-center">
-        <img class="animation__wobble" src="../dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Dziennik Nauczyciela:</h1>
+                    <div class="info">
+                        <span href="#" class="accent-green"> <?php echo $_SESSION["logged"]["firstName"]." ".$_SESSION["logged"]["lastName"] ?> </span>
+                    </div>
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right"></ol>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
     </div>
+    <!-- /.content-header -->
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Info boxes -->
+            <section class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Podgląd</h3>
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body">
+                                    <!doctype html>
+                                    <html lang="pl">
+                                    <head>
+                                        <meta charset="UTF-8">
+                                        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+                                        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+                                        <link rel="stylesheet" href="../css/table.css">
+                                        <title>Użytkownicy</title>
+                                    </head>
+                                    <body>
+                                    <h4>Wszyscy Uczniowie</h4>
+                                    <?php
 
-    <!-- Navbar -->
-    <?php
-    require_once "./views/logged_nauczyciel/navbar_nauczyciel.php";
-    ?>
-    <!-- /.navbar -->
+                                    if (isset($_GET["userIdDelete"])) {
+                                        if ($_GET["userIdDelete"] == 0) {
+                                            echo "<h4>Nie usunięto użytkownika!</h4>";
+                                        } else {
+                                            echo "<h4>Usunięto użytkownika o id={$_GET['userIdDelete']}</h4>";
+                                        }
+                                    }
+                                    if (isset($_SESSION["error"])) {
+                                        echo "<h4>{$_SESSION['error']}</h4>";
+                                        unset($_SESSION["error"]);
+                                    }
+                                    ?>
+                                    <table>
+                                        <tr>
+                                            <th>Imię</th>
+                                            <th>Nazwisko</th>
+                                            <th>Kartkówka</th>
+                                            <th>Sprawdzian</th>
+                                            <th>Odpowiedź</th>
+                                            <th>Średnia</th>
+                                            <th>Email</th>
+                                            <th>Akcje</th>
+                                        </tr>
+                                        <?php
+                                        require_once "../scripts/connect.php";
 
-    <!-- Main Sidebar Container -->
-    <?php
-    require_once "./views/$role/aside.php";
-    ?>
+                                        $userId = $_SESSION["logged"]["userId"]; // Pobieramy ID zalogowanego użytkownika
 
-    <!-- Content Wrapper. Contains page content -->
-    <?php
-    require_once "./views/$role/content.php";
-    ?>
+                                        $sql = "SELECT\n"
+                                            . "  u.id,\n"
+                                            . "  u.firstName AS imie,\n"
+                                            . "  u.lastName AS nazwisko,\n"
+                                            . "  u.email,\n"
+                                            . "  k.ocena AS ocena_kartkowki,\n"
+                                            . "  s.ocena AS ocena_sprawdzianu,\n"
+                                            . "  o.ocena AS ocena_odpowiedzi,\n"
+                                            . "  AVG((k.ocena + s.ocena + o.ocena)/3) AS srednia\n"
+                                            . "FROM\n"
+                                            . "  users u\n"
+                                            . "LEFT JOIN\n"
+                                            . "  kartkowka k ON u.id = k.user_id\n"
+                                            . "LEFT JOIN\n"
+                                            . "  sprawdzian s ON u.id = s.user_id\n"
+                                            . "LEFT JOIN\n"
+                                            . "  odpowiedz o ON u.id = o.user_id\n"
+                                            . "WHERE\n"
+                                            . "  u.id = $userId\n"  // Wykorzystujemy ID zalogowanego użytkownika
+                                            . "GROUP BY\n"
+                                            . "  u.id";
 
-    <!-- /.content-wrapper -->
+                                        $result = $conn->query($sql);
+                                        if ($result->num_rows > 0) {
+                                            while ($row = $result->fetch_assoc()) {
+                                                echo "<tr>";
+                                                echo "<td>" . $row["imie"] . "</td>";
+                                                echo "<td>" . $row["nazwisko"] . "</td>";
+                                                echo "<td>" . $row["ocena_kartkowki"] . "</td>";
+                                                echo "<td>" . $row["ocena_sprawdzianu"] . "</td>";
+                                                echo "<td>" . $row["ocena_odpowiedzi"] . "</td>";
+                                                echo "<td>" . round($row["srednia"], 2) . "</td>";
+                                                echo "<td>" . $row["email"] . "</td>";
+                                                echo "<td><a href='edit.php?userId=" . $row["id"] . "'>Edytuj</a> | <a href='delete.php?userId=" . $row["id"] . "'>Usuń</a></td>";
+                                                echo "</tr>";
+                                            }
+                                        }
+                                        ?>
 
-    <!-- Main Footer -->
-    <?php
-    require_once "./views/footer.php";
-    ?>
-    <?php
-    // Sprawdzenie, czy parametr selectedUserId został przekazany
-    if (isset($_GET['selectedUserId'])) {
-        // Pobranie wartości parametru selectedUserId
-        $selectedUserId = $_GET['selectedUserId'];
-
-        // Wyświetlanie pustego widoku dla wybranego użytkownika
-        echo "Widok dla użytkownika o ID: $selectedUserId";
-    } else {
-        // Wyświetlanie komunikatu o braku określonego użytkownika
-        echo "Nie znaleziono użytkownika.";
-    }
-    ?>
-
-
-
+                                    </table>
+                                    <p><a href="add.php">Dodaj użytkownika</a></p>
+                                    </body>
+                                    </html>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+<!-- Control Sidebar -->
+<aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+</aside>
+<!-- /.control-sidebar -->
+<!-- Main Footer -->
+<?php
+require_once "../footer.php";
+?>
+</footer>
 </div>
 <!-- ./wrapper -->
-
-<!-- REQUIRED SCRIPTS -->
-<!-- jQuery -->
-<!-- Pozostała część kodu HTML w pliku logged.php -->
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('.btn-details').click(function() {
-            var userId = $(this).data('userId');
-
-            // Wykonaj żądanie AJAX, aby pobrać szczegółowe informacje o użytkowniku
-            $.ajax({
-                url: 'pojedynczy.php',
-                method: 'GET',
-                data: { userId: userId },
-                success: function(response) {
-                    // Wyświetl pobrane szczegółowe informacje o użytkowniku
-                    $('#user-details').html(response);
-                },
-                error: function() {
-                    // Wyświetl komunikat błędu, jeśli wystąpił problem z pobraniem danych
-                    $('#user-details').html('Wystąpił błąd podczas pobierania informacji o użytkowniku.');
-                }
-            });
-        });
-    });
-</script>
-
-
-</body>
-</html>
-
-<script src="../plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap -->
-<script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- overlayScrollbars -->
-<script src="../plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-<!-- AdminLTE App -->
-<script src="../dist/js/adminlte.js"></script>
-
-<!-- PAGE PLUGINS -->
-<!-- jQuery Mapael -->
-<script src="../plugins/jquery-mousewheel/jquery.mousewheel.js"></script>
-<script src="../plugins/raphael/raphael.min.js"></script>
-<script src="../plugins/jquery-mapael/jquery.mapael.min.js"></script>
-<script src="../plugins/jquery-mapael/maps/usa_states.min.js"></script>
-<!-- ChartJS -->
-<script src="../plugins/chart.js/Chart.min.js"></script>
-
-<!-- AdminLTE for demo purposes -->
-<script src="../dist/js/demo.js"></script>
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="../dist/js/pages/dashboard2.js"></script>
 </body>
 </html>
