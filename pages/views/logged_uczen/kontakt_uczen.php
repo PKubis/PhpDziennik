@@ -70,7 +70,7 @@
 
         <!-- Main Sidebar Container -->
         <?php
-        require_once __DIR__ . "/../$role/aside1.php";
+        require_once __DIR__ . "/../$role/aside_uczen.php";
         ?>
 
         <!-- Content Wrapper. Contains page content -->

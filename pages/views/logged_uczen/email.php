@@ -9,16 +9,6 @@ use PHPMailer\PHPMailer\Exception;
 
 // Pobierz adres e-mail odbiorcy z bazy danych na podstawie jego ID
 $recipientEmail = '';
-if ($userId) {
-    // Pobierz użytkownika z bazy danych na podstawie ID
-    $sql = "SELECT email FROM users WHERE id = $userId";
-    $result = $conn->query($sql);
-
-    if ($result && $result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        $recipientEmail = $row['email'];
-    }
-}
 
 if (isset($_POST['submit'])) {
     $recipient = $_POST['recipient'];

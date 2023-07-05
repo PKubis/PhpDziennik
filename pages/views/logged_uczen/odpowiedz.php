@@ -65,9 +65,9 @@ session_start();
                                         if ($_SESSION["logged"]["role_id"] == 1) {
                                             $loggedUserId = $_SESSION["logged"]["userId"];
 
-                                            $sql = "SELECT u.firstName, u.lastName, k.ocena, k.data_modyfikacji
+                                            $sql = "SELECT u.firstName, u.lastName, o.ocena, o.data_modyfikacji
                 FROM users u
-                JOIN kartkowka k ON u.id = k.user_id
+                JOIN odpowiedz o ON u.id = o.user_id
                 WHERE u.id = $loggedUserId;";
 
                                             $result = $conn->query($sql);
@@ -76,7 +76,7 @@ session_start();
                                                 echo "<tr>
                                                     <th>Imię</th>
                                                     <th>Nazwisko</th>
-                                                    <th>Kartkówka</th>
+                                                    <th>Odpowiedź</th>
                                                  <th>Data wystawienia</th>
                                                 </tr>";
                                                 while ($row = $result->fetch_assoc()) {

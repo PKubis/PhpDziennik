@@ -38,20 +38,20 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="./index.html" class="nav-link">
+                                    <a href="./views/logged_uczen/kartkowka.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Kartkówka</p>
                                     </a>
                                 </li>
 
                                 <li class="nav-item">
-                                    <a href="/../../dziennik23/dzienniklekcyjny-master/pages/views/logged_uczen/pojedynczy.php" class="nav-link active">
+                                    <a href="./views/logged_uczen/sprawdzian.php" class="nav-link active">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Sprawdzian</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="./calendar_admin.html" class="nav-link">
+                                    <a href="./views/logged_uczen/odpowiedz.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Odpowiedź</p>
                                     </a>
