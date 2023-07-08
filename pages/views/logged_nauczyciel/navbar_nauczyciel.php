@@ -7,13 +7,13 @@
 			</a>
 		</li>
 		<li class="nav-item d-none d-sm-inline-block">
-			<a href="/../../dziennik23/dzienniklekcyjny-master/pages/logged.php" class="nav-link">Home</a>
+			<a href="/../dziennik23/dzienniklekcyjny-master/pages/logged.php" class="nav-link">Home</a>
 		</li>
 		<li class="nav-item d-none d-sm-inline-block">
-			<a href="/../../dziennik23/dzienniklekcyjny-master/pages/views/logged_nauczyciel/kontakt.php" class="nav-link">Kontakt</a>
+			<a href="/../dziennik23/dzienniklekcyjny-master/pages/views/logged_nauczyciel/kontakt.php" class="nav-link">Kontakt</a>
 		</li>
 		<li class="nav-item d-none d-sm-inline-block">
-			<a href="/../../dziennik23/dzienniklekcyjny-master/scripts/logout.php" class="nav-link">Wyloguj</a>
+			<a href="/../dziennik23/dzienniklekcyjny-master/scripts/logout.php" class="nav-link">Wyloguj</a>
 		</li>
 	</ul>
 	<!-- Right navbar links -->

@@ -64,7 +64,7 @@
 
         <!-- Navbar -->
         <?php
-        require_once __DIR__ . "/navbar_uczen.php";
+        require_once __DIR__ . "/../logged_uczen/navbar.php";
         ?>
         <!-- /.navbar -->
 
@@ -164,28 +164,7 @@
     <!-- Ajax script -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function () {
-            $('.btn-details').click(function () {
-                var userId = $(this).data('userId');
 
-                // Wykonaj żądanie AJAX, aby pobrać szczegółowe informacje o użytkowniku
-                $.ajax({
-                    url: 'pojedynczy.php',
-                    method: 'GET',
-                    data: {
-                        userId: userId
-                    },
-                    success: function (response) {
-                        // Wyświetl pobrane szczegółowe informacje o użytkowniku
-                        $('#user-details').html(response);
-                    },
-                    error: function () {
-                        // Wyświetl komunikat błędu, jeśli wystąpił problem z pobraniem danych
-                        $('#user-details').html('Wystąpił błąd podczas pobierania informacji o użytkowniku.');
-                    }
-                });
-            });
-        });
     </script>
 
     <!-- PAGE PLUGINS -->

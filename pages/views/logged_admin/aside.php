@@ -46,24 +46,25 @@
 					</a>
 					<ul class="nav nav-treeview">
 						<li class="nav-item">
-							<a href="./index.html" class="nav-link">
+							<a href="./views/logged_admin/nauczyciele.php" class="nav-link">
 								<i class="far fa-circle nav-icon"></i>
 								<p>Nauczyciele</p>
 							</a>
 						</li>
 
 						<li class="nav-item">
-							<a href="./index2.html" class="nav-link active">
+							<a href="./views/logged_admin/uczniowie.php" class="nav-link">
 								<i class="far fa-circle nav-icon"></i>
 								<p>Uczniowie</p>
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="./calendar_admin.html" class="nav-link">
+							<a href="./views/logged_admin/adminowie.php" class="nav-link">
 								<i class="far fa-circle nav-icon"></i>
-								<p>Kalendarz</p>
+								<p>Adminowie</p>
 							</a>
 						</li>
+
 					</ul>
 				</li>
 			</ul>
