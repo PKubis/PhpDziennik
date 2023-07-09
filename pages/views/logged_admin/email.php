@@ -6,7 +6,7 @@ require '../../../vendor/PHPMailer-master/src/Exception.php';
 require '../../../vendor/PHPMailer-master/src/SMTP.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
+require_once '../../../scripts/connect.php';
 // Pobierz dane użytkowników z bazy danych
 $sql = "SELECT firstName, lastName, email FROM users";
 $result = $conn->query($sql);

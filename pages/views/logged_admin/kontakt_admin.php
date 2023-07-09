@@ -54,6 +54,7 @@
         <!-- Theme style -->
         <link rel="stylesheet" href="../../../dist/css/adminlte.min.css">
 
+
     </head>
     <body class="hold-transition dark-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
     <div class="wrapper">
@@ -141,7 +142,7 @@
 
         <!-- Main Footer -->
         <?php
-        require_once 'dzienniklekcyjny-master/pages/views/logged_admin/email.php'; //
+        require_once 'email.php'; //
 
         ?>
         <?php
@@ -231,7 +232,7 @@
 <!-- overlayScrollbars -->
 <script src="../../../plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 <!-- AdminLTE App -->
-<script src="../../../dist/js/adminlte.js"></script>
+<script src="../dist/js/adminlte.js"></script>
 
 <!-- Ajax script -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
