@@ -44,7 +44,7 @@
                                         <title>Użytkownicy</title>
                                     </head>
                                     <body>
-                                    <h4>Wszyscy Uczniowie</h4> <?php
+                                    <h4>Wszystkich uczniów</h4> <?php
 
                                     if (isset($_GET["userIdDelete"])) {
                                         if ($_GET["userIdDelete"] == 0) {

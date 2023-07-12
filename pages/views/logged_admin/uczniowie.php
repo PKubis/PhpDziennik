@@ -4,7 +4,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Dziennik Nauczyciela:</h1>
+                    <h1 class="m-0">Dziennik Admina:</h1>
                     <div class="info">
                     </div>
                 </div><!-- /.col -->
@@ -112,19 +112,29 @@
                   content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
             <meta http-equiv="X-UA-Compatible" content="ie=edge">
             <link rel="stylesheet" href="../../../css/table.css">
-            <title>Użytkownicy</title>
+            <title>Uczniowie</title>
         </head>
         <body>
-        <h4>Podgląd nauczycieli</h4>
+        <h4>Podgląd Uczniów</h4>
+        <?php
+        if (isset($_GET["userIdDelete"])) {
+            if ($_GET["userIdDelete"] == 0) {
+                echo "<h4>Nie usunięto użytkownika!</h4>";
+            } else {
+                echo "<h4>Usunięto użytkownika o id={$_GET['userIdDelete']}</h4>";
+            }
+        }
+        if (isset($_SESSION["error"])) {
+            echo "<h4>{$_SESSION['error']}</h4>";
+            unset($_SESSION["error"]);
+        }
+        ?>
         <?php
         require_once "../../../scripts/connect.php";
 
-        $sql = "SELECT u.firstName, u.lastName, u.email, r.role AS role\n"
-
+        $sql = "SELECT u.id, u.firstName, u.lastName, u.email, r.role AS role\n"
             . "FROM users u\n"
-
             . "JOIN roles r ON u.role_id = r.id\n"
-
             . "WHERE u.role_id = 1;";
         $result = $conn->query($sql);
 
@@ -135,6 +145,7 @@
             echo "<th>Nazwisko</th>";
             echo "<th>Rola</th>";
             echo "<th>Email</th>";
+            echo "<th>Akcje</th>";
             echo "</tr>";
 
             while ($row = $result->fetch_assoc()) {
@@ -143,6 +154,7 @@
                 echo "<td>" . $row['lastName'] . "</td>";
                 echo "<td>" . $row['role'] . "</td>";
                 echo "<td>" . $row['email'] . "</td>";
+                echo "<td><button class='delete-button' data-user-id='" . $row['id'] . "'>Usuń</button></td>";
                 echo "</tr>";
             }
 
@@ -153,34 +165,20 @@
         ?>
 
         </table>
-        <?php
-        if (isset($_GET["userIdUpdate"])) {
-            $userId = $_GET["userIdUpdate"];
-            $sql = "SELECT u.*, k.ocena AS ocena_kartkowki, s.ocena AS ocena_sprawdzianu, o.ocena AS ocena_odpowiedzi
-        FROM users AS u
-        LEFT JOIN kartkowka AS k ON u.id = k.user_id AND k.ocena BETWEEN 1 AND 6
-        LEFT JOIN sprawdzian AS s ON u.id = s.user_id AND s.ocena BETWEEN 1 AND 6
-        LEFT JOIN odpowiedz AS o ON u.id = o.user_id AND o.ocena BETWEEN 1 AND 6
-        WHERE u.id = $userId";
-            $result = $conn->query($sql);
-            $user = $result->fetch_assoc();
+        <?php if (isset($_GET["addUser"])) : ?>
+            <h4>Dodawanie użytkownika</h4>
+            <form action="../../../scripts/add_user.php" method="post">
+                <input type="text" name="imie" placeholder="Podaj imię" autofocus><br><br>
+                <input type="text" name="nazwisko" placeholder="Podaj nazwisko"><br><br>
+                <input type="password" name="haslo" placeholder="Podaj hasło"><br><br>
+                <input type="email" name="email" placeholder="Podaj adres e-mail"><br><br>
+                <input type="submit" value="Wyślij">
+            </form>
+        <?php endif; ?>
+        <a href="./uczniowie.php?addUser=1">Dodaj użytkownika</a>
 
-            echo <<< EDITUSERFORM
-        <h4>Aktualizacja użytkownika</h4><form action="../scripts/update_user.php?userIdUpdate=$userId" method="post">
-        <input type="hidden" name="userId" value="$userId">
-        <input type="text" name="imie" placeholder="Podaj imię" value="{$user['firstName']}" readonly><br><br>
-        <input type="text" name="nazwisko" placeholder="Podaj nazwisko" value="{$user['lastName']}" readonly><br><br>
-        <input type="text" name="ocena_kartkowki" placeholder="Podaj ocenę kartkówki" value="{$user['ocena_kartkowki']}" autofocus><br><br>
-        <input type="text" name="ocena_sprawdzianu" placeholder="Podaj ocenę sprawdzianu" value="{$user['ocena_sprawdzianu']}"><br><br>
-        <input type="text" name="ocena_odpowiedzi" placeholder="Podaj ocenę odpowiedzi" value="{$user['ocena_odpowiedzi']}"><br><br>
-        <input type="email" name="email" placeholder="Podaj adres e-mail" value="{$user['email']}" readonly><br><br>
-        <input type="submit" value="Aktualizuj użytkownika" onclick="updateUser()"></form>
-        EDITUSERFORM;
-        }else {
-        }
 
-        $conn->close();
-        ?><script>
+        <script>
             function goBack() {
                 history.back();
             }
@@ -193,24 +191,23 @@
                     deleteUser(userId);
                 });
             });
+            // Funkcja do usuwania użytkownika
+            function deleteUser(userId) {
+                if (confirm("Czy na pewno chcesz usunąć tego użytkownika?")) {
+                    window.location.href = `../../../scripts/delete_user.php?userIdDelete=${userId}`;
+                }
+            }
+
+
+
+
 
             // Funkcja do otwierania formularza edycji użytkownika
             function openEditUserForm(userId) {
-                window.location.href = `../../../pages/views/logged_nauczyciel/pojedynczy.php?userIdUpdate=${userId}`;
+                window.location.href = `../pages/logged.php?userIdUpdate=${userId}`;
             }
-            // Funkcja do aktualizacji użytkownika
-            function updateUser() {
-                var ocena_kartkowki = document.getElementsByName("ocena_kartkowki")[0].value;
-                var ocena_sprawdzianu = document.getElementsByName("ocena_sprawdzianu")[0].value;
-                var ocena_odpowiedzi = document.getElementsByName("ocena_odpowiedzi")[0].value;
-                if (ocena_kartkowki >= 1 && ocena_kartkowki <= 6 && ocena_sprawdzianu >= 1 && ocena_sprawdzianu <= 6 && ocena_odpowiedzi >= 1 && ocena_odpowiedzi <= 6) {
-                    alert("Użytkownik został zaktualizowany!");
-                    window.location.href = `../../../pages/views/logged_nauczyciel/pojedynczy.php?userIdUpdate`;
-                } else {
-                    alert("Błąd aktualizacji: Wprowadzona ocena musi być w przedziale od 1 do 6.");
-                    window.location.href = `../../../pages/views/logged_nauczyciel/pojedynczy.php?userIdUpdate`;
-                }
-            }
+
+
         </script>
         </body>
         </html>

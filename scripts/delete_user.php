@@ -26,15 +26,20 @@ if (isset($_GET['userIdDelete'])) {
     // Usunięcie użytkownika z tabeli "users"
     $deleteUserSql = "DELETE FROM users WHERE id = $id";
     if ($conn->query($deleteUserSql) === TRUE) {
-        if (isset($_SESSION['users']) && isset($_SESSION['users'][$id])) {
+        if ($conn->affected_rows != 0) {
             unset($_SESSION['users'][$id]); // Usunięcie użytkownika z tablicy $_SESSION['users']
+            // Wyświetlenie komunikatu o usunięciu użytkownika
+            echo "<h4>Użytkownik  został usunięty.</h4>";
+        } else {
+            echo "<h4>Nie udało się usunąć użytkownika.</h4>";
         }
-        header("location: ../pages/logged.php?userDelete=$id");
-        exit();
-    } else {
-        header("location: ../pages/logged.php?userDelete=0");
-        exit();
     }
+
+    header("location: ../pages/logged.php?userDelete=$id");
+    exit();
+} else {
+    header("location: ../pages/logged.php?userDelete=0");
+    exit();
 }
 
 $conn->close();

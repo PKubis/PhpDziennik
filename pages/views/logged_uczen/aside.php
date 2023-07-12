@@ -1,6 +1,6 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <span href="index3.html" class="brand-link">
+    <span class="brand-link">
         <span class="brand-text font-weight-light">UCZEŃ</span>
     </span>
 

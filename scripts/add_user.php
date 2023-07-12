@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $conn ->query($odpowiedzSql);
 
         if ($conn->affected_rows != 0) {
-            $_SESSION["error"] = "Prawidłowo dodano użytkownika";
+            $_SESSION["error"] = "Prawidłowo dodano użytkownika $firstName  $lastName";
         }
     } else {
         $_SESSION["error"] = "Nie dodano użytkownika!";

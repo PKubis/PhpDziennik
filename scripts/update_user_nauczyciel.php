@@ -32,25 +32,56 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                       SET firstName='$firstName', lastName='$lastName', email='$email' 
                       WHERE id=$userId";
     if ($conn->query($updateUserSql) === TRUE) {
-        // Aktualizacja oceny kartkówki
-        $updateKartkowkaSql = "UPDATE kartkowka
-                               SET ocena=$ocena_kartkowki, data_modyfikacji=NOW()
-                               WHERE user_id=$userId";
-        $conn->query($updateKartkowkaSql);
+        // Pobranie dotychczasowych ocen i dat modyfikacji
+        $getOcenySql = "SELECT kartkowka.ocena AS ocena_kartkowki, sprawdzian.ocena AS ocena_sprawdzianu, odpowiedz.ocena AS ocena_odpowiedzi
+                        FROM users
+                        LEFT JOIN kartkowka ON users.id = kartkowka.user_id
+                        LEFT JOIN sprawdzian ON users.id = sprawdzian.user_id
+                        LEFT JOIN odpowiedz ON users.id = odpowiedz.user_id
+                        WHERE users.id = $userId";
+        $result = $conn->query($getOcenySql);
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $ocena_kartkowki_dotychczasowa = $row['ocena_kartkowki'];
+            $ocena_sprawdzianu_dotychczasowa = $row['ocena_sprawdzianu'];
+            $ocena_odpowiedzi_dotychczasowa = $row['ocena_odpowiedzi'];
 
-        // Aktualizacja oceny sprawdzianu
-        $updateSprawdzianSql = "UPDATE sprawdzian
-                                SET ocena=$ocena_sprawdzianu, data_modyfikacji=NOW()
-                                WHERE user_id=$userId";
-        $conn->query($updateSprawdzianSql);
+            // Aktualizacja oceny kartkówki, jeśli różni się od dotychczasowej
+            if ($ocena_kartkowki != $ocena_kartkowki_dotychczasowa) {
+                $updateKartkowkaSql = "UPDATE kartkowka
+                                       SET ocena=$ocena_kartkowki, data_modyfikacji=NOW()
+                                       WHERE user_id=$userId";
+                $conn->query($updateKartkowkaSql);
+            }
 
-        // Aktualizacja oceny odpowiedzi
-        $updateOdpowiedzSql = "UPDATE odpowiedz
-                               SET ocena=$ocena_odpowiedzi, data_modyfikacji=NOW()
-                               WHERE user_id=$userId";
-        $conn->query($updateOdpowiedzSql);
+            // Aktualizacja oceny sprawdzianu, jeśli różni się od dotychczasowej
+            if ($ocena_sprawdzianu != $ocena_sprawdzianu_dotychczasowa) {
+                $updateSprawdzianSql = "UPDATE sprawdzian
+                                        SET ocena=$ocena_sprawdzianu, data_modyfikacji=NOW()
+                                        WHERE user_id=$userId";
+                $conn->query($updateSprawdzianSql);
+            }
 
-        $_SESSION['success'] = "Użytkownik został zaktualizowany.";
+            // Aktualizacja oceny odpowiedzi, jeśli różni się od dotychczasowej
+            if ($ocena_odpowiedzi != $ocena_odpowiedzi_dotychczasowa) {
+                $updateOdpowiedzSql = "UPDATE odpowiedz
+                                       SET ocena=$ocena_odpowiedzi, data_modyfikacji=NOW()
+                                       WHERE user_id=$userId";
+                $conn->query($updateOdpowiedzSql);
+            }
+
+            // Jeśli wszystkie oceny są takie same, nie zmieniaj daty modyfikacji
+            if ($ocena_kartkowki == $ocena_kartkowki_dotychczasowa &&
+                $ocena_sprawdzianu == $ocena_sprawdzianu_dotychczasowa &&
+                $ocena_odpowiedzi == $ocena_odpowiedzi_dotychczasowa) {
+                $updateUserSql = "UPDATE users
+                                  SET firstName='$firstName', lastName='$lastName', email='$email' 
+                                  WHERE id=$userId";
+                $conn->query($updateUserSql);
+            }
+
+            $_SESSION['success'] = "Użytkownik został zaktualizowany.";
+        }
     } else {
         $_SESSION['error'] = "Błąd podczas aktualizacji użytkownika: " . $conn->error;
     }

@@ -25,11 +25,21 @@
             <!-- Info boxes -->
             <section class="content">
                 <div class="container-fluid">
+                    <?php
+                    if (isset($_GET["userDelete"])) {
+                        $userDeleteId = $_GET["userDelete"];
+                        if ($userDeleteId != 0) {
+                            echo "<h4>Użytkownik został  usunięty.</h4>";
+                        } else {
+                            echo "<h4>Nie udało się usunąć użytkownika.</h4>";
+                        }
+                    }
+                    ?>
                     <div class="row">
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 class="card-title">Oceny</h3>
+                                    <h3 class="card-title">Podgląd wszystkich</h3>
                                 </div>
                                 <!-- /.card-header -->
                                 <table class="card-body">
@@ -44,7 +54,7 @@
                                         <title>Użytkownicy</title>
                                     </head>
                                     <body>
-                                    <h4>Użytkownicy</h4>
+                                    <h4>Użytkownków</h4>
                                     <?php
                                     if (isset($_GET["userIdDelete"])) {
                                         if ($_GET["userIdDelete"] == 0) {
