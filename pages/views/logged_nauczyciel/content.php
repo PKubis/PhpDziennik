@@ -165,14 +165,19 @@ EDITUSERFORM;
                                             var ocena_kartkowki = document.getElementsByName("ocena_kartkowki")[0].value;
                                             var ocena_sprawdzianu = document.getElementsByName("ocena_sprawdzianu")[0].value;
                                             var ocena_odpowiedzi = document.getElementsByName("ocena_odpowiedzi")[0].value;
-                                            if (ocena_kartkowki >= 1 && ocena_kartkowki <= 6 && ocena_sprawdzianu >= 1 && ocena_sprawdzianu <= 6 && ocena_odpowiedzi >= 1 && ocena_odpowiedzi <= 6) {
+
+                                            // Sprawdzenie czy wprowadzone oceny mieszczą się w przedziale od 1 do 6 lub są równa null
+                                            if ((ocena_kartkowki === "" || (ocena_kartkowki >= 1 && ocena_kartkowki <= 6)) &&
+                                                (ocena_sprawdzianu === "" || (ocena_sprawdzianu >= 1 && ocena_sprawdzianu <= 6)) &&
+                                                (ocena_odpowiedzi === "" || (ocena_odpowiedzi >= 1 && ocena_odpowiedzi <= 6))) {
                                                 alert("Użytkownik został zaktualizowany!");
                                                 window.location.href = `../pages/logged.php?userIdUpdate`;
                                             } else {
-                                                alert("Błąd aktualizacji: Wprowadzona ocena musi być w przedziale od 1 do 6.");
+                                                alert("Błąd aktualizacji: Wprowadź oceny w przedziale od 1 do 6 lub zostaw pole oceny puste.");
                                                 window.location.href = `../pages/logged.php`;
                                             }
                                         }
+
                                     </script>
                                     </body>
                                     </html>

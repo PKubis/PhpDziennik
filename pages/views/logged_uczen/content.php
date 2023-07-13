@@ -51,26 +51,33 @@
                                         $loggedUserId = $_SESSION["logged"]["userId"];
 
                                         $sql = "SELECT
-                                                    u.id,
-                                                    u.firstName AS imie,
-                                                    u.lastName AS nazwisko,
-                                                    u.email,
-                                                    k.ocena AS ocena_kartkowki,
-                                                    s.ocena AS ocena_sprawdzianu,
-                                                    o.ocena AS ocena_odpowiedzi,
-                                                    AVG((k.ocena + s.ocena + o.ocena)/3) AS srednia
-                                                FROM
-                                                    users u
-                                                LEFT JOIN
-                                                    kartkowka k ON u.id = k.user_id
-                                                LEFT JOIN
-                                                    sprawdzian s ON u.id = s.user_id
-                                                LEFT JOIN
-                                                    odpowiedz o ON u.id = o.user_id
-                                                WHERE
-                                                    u.id = $loggedUserId
-                                                GROUP BY
-                                                    u.id";
+            u.id,
+            u.firstName AS imie,
+            u.lastName AS nazwisko,
+            u.email,
+            k.ocena AS ocena_kartkowki,
+            s.ocena AS ocena_sprawdzianu,
+            o.ocena AS ocena_odpowiedzi,
+            AVG((COALESCE(k.ocena, 0) + COALESCE(s.ocena, 0) + COALESCE(o.ocena, 0)) / 
+                NULLIF(
+                    CASE WHEN k.ocena IS NULL THEN 0 ELSE 1 END +
+                    CASE WHEN s.ocena IS NULL THEN 0 ELSE 1 END +
+                    CASE WHEN o.ocena IS NULL THEN 0 ELSE 1 END,
+                    0
+                )
+            ) AS srednia
+        FROM
+            users u
+        LEFT JOIN
+            kartkowka k ON u.id = k.user_id
+        LEFT JOIN
+            sprawdzian s ON u.id = s.user_id
+        LEFT JOIN
+            odpowiedz o ON u.id = o.user_id
+        WHERE
+            u.id = $loggedUserId
+        GROUP BY
+            u.id";
 
                                         $result = $conn->query($sql);
                                         if ($result->num_rows > 0) {
@@ -128,7 +135,7 @@
 <!-- /.control-sidebar -->
 <!-- Main Footer -->
 <footer class="main-footer">
-    <strong>Iza, Marcin, Piotr <a href="https://github.com/kurasmarcin/dzienniklekcyjny/tree/master" target="_blank">Nasze Repozytorium</a>. </strong> Praca dzięki Admin_LTE. <div class="float-right d-none d-sm-inline-block">
+    <strong>Iza, Marcin, Piotr <a href="https://github.com/PKubis/weekend" target="_blank">Nasze Repozytorium</a>. </strong> Praca dzięki Admin_LTE. <div class="float-right d-none d-sm-inline-block">
         <b>Wersja</b> 5.8.9
     </div>
 </footer>

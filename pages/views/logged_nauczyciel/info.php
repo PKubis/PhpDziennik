@@ -275,9 +275,7 @@
 <!-- /.content-wrapper -->
 
 <!-- Main Footer -->
-<?php
-require_once "../footer.php";
-?>
+
 
 </div>
 <!-- ./wrapper -->

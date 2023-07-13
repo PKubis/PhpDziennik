@@ -1,5 +1,5 @@
 <?php
-  session_start();
+session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,8 +20,8 @@
 <body class="hold-transition register-page">
 <div class="register-box">
   <?php
-    if (isset($_SESSION["error"])){
-      echo <<<ERROR
+  if (isset($_SESSION["error"])){
+    echo <<<ERROR
         <div class="alert alert-danger alert-dismissible">
                   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                   <h5><i class="icon fas fa-ban"></i> Błąd!</h5>
@@ -30,8 +30,8 @@
 ERROR;
 
 
-      unset($_SESSION["error"]);
-    }
+    unset($_SESSION["error"]);
+  }
   ?>
   <div class="card card-outline card-primary">
     <div class="card-header text-center">
@@ -95,23 +95,12 @@ ERROR;
           </div>
         </div>
 
-        <div class="input-group mb-3">
-          <input type="date" class="form-control" name="birthday">
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-calendar"></span>
-            </div>
-          </div>
-        </div>
-
-
-
         <div class="row">
           <div class="col-8">
             <div class="icheck-primary">
               <input type="checkbox" id="agreeTerms" name="terms" value="agree">
               <label for="agreeTerms">
-               Nie jestem robotem
+                Nie jestem robotem
               </label>
             </div>
           </div>

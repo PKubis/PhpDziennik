@@ -1,13 +1,7 @@
 <?php
 session_start();
 
-foreach ($_POST as $key => $value) {
-    if (empty($value)) {
-        echo "<script>history.back();</script>";
-        $_SESSION['error'] = "Wypełnij wszystkie pola, np. $key";
-        exit();
-    }
-}
+
 
 require_once '../scripts/connect.php';
 
@@ -20,12 +14,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $ocena_odpowiedzi = $_POST['ocena_odpowiedzi'];
     $email = $_POST['email'];
 
-    // Sprawdzenie czy wprowadzone oceny mieszczą się w przedziale od 1 do 6
-    if ($ocena_kartkowki < 1 || $ocena_kartkowki > 6 || $ocena_sprawdzianu < 1 || $ocena_sprawdzianu > 6 || $ocena_odpowiedzi < 1 || $ocena_odpowiedzi > 6) {
-        $_SESSION['error'] = "Wprowadź oceny w przedziale od 1 do 6.";
+    // Sprawdzenie czy wprowadzone oceny mieszczą się w przedziale od 1 do 6 lub są równa null
+    if (($ocena_kartkowki != null && ($ocena_kartkowki < 1 || $ocena_kartkowki > 6)) ||
+        ($ocena_sprawdzianu != null && ($ocena_sprawdzianu < 1 || $ocena_sprawdzianu > 6)) ||
+        ($ocena_odpowiedzi != null && ($ocena_odpowiedzi < 1 || $ocena_odpowiedzi > 6))) {
+        $_SESSION['error'] = "Wprowadź oceny w przedziale od 1 do 6 lub zostaw pole oceny puste.";
         header("location: ../pages/logged.php");
         exit();
     }
+
 
     // Aktualizacja użytkownika w bazie danych
     $updateUserSql = "UPDATE users

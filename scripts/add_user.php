@@ -4,7 +4,7 @@ session_start();
 foreach ($_POST as $key => $value) {
     if (empty($value)) {
         echo "<script>history.back();</script>";
-        $_SESSION["error"] = "Wypełnij wszystkie pola np. $key";
+        $_SESSION["error"] = "Wypełnij wszystkie pola, np. $key";
         exit();
     }
 }
@@ -29,15 +29,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $userId = $conn->insert_id;
 
         // Wstawianie nowego rekordu do tabeli "kartkowka"
-        $kartkowkaSql = "INSERT INTO kartkowka (user_id) VALUES ('$userId')";
+        $kartkowkaSql = "INSERT INTO kartkowka (user_id, data_modyfikacji) VALUES ('$userId', NULL)";
         $conn->query($kartkowkaSql);
-        $sprawdzianSql ="INSERT INTO sprawdzian (user_id) VALUES ('$userId')";
-        $conn ->query($sprawdzianSql);
-        $odpowiedzSql ="INSERT INTO odpowiedz (user_id) VALUES ('$userId')";
-        $conn ->query($odpowiedzSql);
+
+        // Wstawianie nowego rekordu do tabeli "sprawdzian"
+        $sprawdzianSql = "INSERT INTO sprawdzian (user_id, data_modyfikacji) VALUES ('$userId', NULL)";
+        $conn->query($sprawdzianSql);
+
+        // Wstawianie nowego rekordu do tabeli "odpowiedz"
+        $odpowiedzSql = "INSERT INTO odpowiedz (user_id, data_modyfikacji) VALUES ('$userId', NULL)";
+        $conn->query($odpowiedzSql);
 
         if ($conn->affected_rows != 0) {
-            $_SESSION["error"] = "Prawidłowo dodano użytkownika $firstName  $lastName";
+            $_SESSION["error"] = "Prawidłowo dodano użytkownika $firstName $lastName";
         }
     } else {
         $_SESSION["error"] = "Nie dodano użytkownika!";

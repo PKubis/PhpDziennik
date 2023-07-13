@@ -89,6 +89,7 @@
                                             . "  u.lastName AS nazwisko,\n"
                                             . "  u.role_id AS role,\n"
                                             . "  u.email,\n"
+                                            . "  r.role as rola,\n"
                                             . "  k.ocena AS ocena_kartkowki,\n"
                                             . "  s.ocena AS ocena_sprawdzianu,\n"
                                             . "  o.ocena AS ocena_odpowiedzi,\n"
@@ -104,6 +105,8 @@
                                             . "LEFT JOIN\n"
                                             . "  sprawdzian AS s ON u.id = s.user_id\n"
                                             . "LEFT JOIN\n"
+                                            . "  roles AS r ON r.id = u.role_id\n"
+                                            . "LEFT JOIN\n"
                                             . "  odpowiedz AS o ON u.id = o.user_id\n";
 
 
@@ -115,7 +118,7 @@
                                                 echo "<tr>";
                                                 echo "<td>" . $user['imie'] . "</td>";
                                                 echo "<td>" . $user['nazwisko'] . "</td>";
-                                                echo "<td>" . $user['role'] . "</td>";
+                                                echo "<td>" . $user['rola'] . "</td>";
                                                 echo "<td>" . (isset($user['ocena_kartkowki']) ? $user['ocena_kartkowki'] : "") . "</td>";
                                                 echo "<td>" . (isset($user['ocena_sprawdzianu']) ? $user['ocena_sprawdzianu'] : "") . "</td>";
                                                 echo "<td>" . (isset($user['ocena_odpowiedzi']) ? $user['ocena_odpowiedzi'] : "") . "</td>";
@@ -162,12 +165,6 @@ ADDUSERFORM;
             <input type="hidden" name="userId" value="$userId">
             <input type="text" name="imie" placeholder="Podaj imię" value="{$user['firstName']}" autofocus><br><br>
             <input type="text" name="nazwisko" placeholder="Podaj nazwisko" value="{$user['lastName']}"><br><br>
-            <label for="roleSelect">Wybierz rolę:</label>
-            <select id="roleSelect" name="role" value="{$user['role_id']}">
-             <option value="1">Uczeń</option>
-            <option value="2">Nauczyciel</option>
-            <option value="3">Admin</option>
-             </select> <br><br>
             <input type="text" name="ocena_kartkowki" placeholder="Podaj ocenę kartkówki" value="{$user['ocena_kartkowki']}" optional><br><br>
             <input type="text" name="ocena_sprawdzianu" placeholder="Podaj ocenę sprawdzianu" value="{$user['ocena_sprawdzianu']}" optional><br><br>
             <input type="text" name="ocena_odpowiedzi" placeholder="Podaj ocenę odpowiedzi" value="{$user['ocena_odpowiedzi']}" optional><br><br>
@@ -183,6 +180,9 @@ EDITUSERFORM; }else {
                                     ?>
 
                                     <script>
+                                        function goBack() {
+                                            history.back();
+                                        }
                                         // Obsługa zdarzenia kliknięcia przycisku "Usuń"
                                         const deleteButtons = document.querySelectorAll(".delete-button");
                                         deleteButtons.forEach(button => {
@@ -202,7 +202,23 @@ EDITUSERFORM; }else {
                                                 openEditUserForm(userId);
                                             });
                                         });
+                                        // Funkcja do aktualizacji użytkownika
+                                        function updateUser() {
+                                            var ocena_kartkowki = document.getElementsByName("ocena_kartkowki")[0].value;
+                                            var ocena_sprawdzianu = document.getElementsByName("ocena_sprawdzianu")[0].value;
+                                            var ocena_odpowiedzi = document.getElementsByName("ocena_odpowiedzi")[0].value;
 
+                                            // Sprawdzenie czy wprowadzone oceny mieszczą się w przedziale od 1 do 6 lub są równa null
+                                            if ((ocena_kartkowki === "" || (ocena_kartkowki >= 1 && ocena_kartkowki <= 6)) &&
+                                                (ocena_sprawdzianu === "" || (ocena_sprawdzianu >= 1 && ocena_sprawdzianu <= 6)) &&
+                                                (ocena_odpowiedzi === "" || (ocena_odpowiedzi >= 1 && ocena_odpowiedzi <= 6))) {
+                                                alert("Użytkownik został zaktualizowany!");
+                                                window.location.href = `../pages/logged.php?userIdUpdate`;
+                                            } else {
+                                                alert("Błąd aktualizacji: Wprowadź oceny w przedziale od 1 do 6 lub zostaw pole oceny puste.");
+                                                window.location.href = `../pages/logged.php`;
+                                            }
+                                        }
                                         // Funkcja do usuwania użytkownika
                                         function deleteUser(userId) {
                                             if (confirm("Czy na pewno chcesz usunąć tego użytkownika?")) {

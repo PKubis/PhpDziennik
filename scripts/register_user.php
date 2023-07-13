@@ -16,13 +16,20 @@ if (!isset($_POST["terms"])) {
     $error = 1;
 }
 
-if ($_POST["pass1"] != $_POST["pass2"]) {
-    $_SESSION["error"] = "Hasła są różne!";
+if (empty($_POST["pass1"]) || empty($_POST["pass2"])) {
+    $_SESSION["error"] = "Wprowadź hasło w oba pola!";
     $error = 1;
 }
 
-if ($_POST["email1"] != $_POST["email2"]) {
-    $_SESSION["error"] = "Adresy email są różne!";
+$password = $_POST["pass1"];
+
+if (strlen($password) < 8 || !preg_match("/[A-Z]/", $password) || !preg_match("/[a-z]/", $password) || !preg_match("/[0-9]/", $password)) {
+    $_SESSION["error"] = "Hasło musi mieć co najmniej 8 znaków i zawierać co najmniej jedną dużą literę, jedną małą literę i jedną cyfrę!";
+    $error = 1;
+}
+
+if ($_POST["pass1"] != $_POST["pass2"]) {
+    $_SESSION["error"] = "Hasła są różne!";
     $error = 1;
 }
 
@@ -34,11 +41,11 @@ if ($error != 0) {
 require_once "./connect.php";
 
 try {
-    $stmt = $conn->prepare("INSERT INTO `users` (`id`, `email`, `firstName`, `lastName`, `birthday`, `password`, `created_at`) VALUES (?, ?, ?, ?, ?, ?, current_timestamp())");
+    $stmt = $conn->prepare("INSERT INTO `users` (`id`, `email`, `firstName`, `lastName`,  `password`, `created_at`) VALUES (?, ?, ?, ?, ?, current_timestamp())");
 
     $pass = password_hash($_POST["pass1"], PASSWORD_ARGON2ID);
 
-    $stmt->bind_param("ssssss", $_POST["id"], $_POST["email1"], $_POST["firstName"], $_POST["lastName"], $_POST["birthday"], $pass);
+    $stmt->bind_param("sssss", $_POST["id"], $_POST["email1"], $_POST["firstName"], $_POST["lastName"],  $pass);
 
     $stmt->execute();
 
@@ -46,17 +53,17 @@ try {
         $user_id = $stmt->insert_id;
 
         // Insert record into odpowiedz table
-        $stmt_odpowiedz = $conn->prepare("INSERT INTO odpowiedz (user_id, ocena, data_wystawienia, data_modyfikacji) VALUES (?, NULL, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP())");
+        $stmt_odpowiedz = $conn->prepare("INSERT INTO odpowiedz (user_id, ocena,data_modyfikacji) VALUES (?, NULL, NULL)");
         $stmt_odpowiedz->bind_param("i", $user_id);
         $stmt_odpowiedz->execute();
 
         // Insert record into sprawdzian table
-        $stmt_sprawdzian = $conn->prepare("INSERT INTO sprawdzian (user_id, ocena, data_wystawienia, data_modyfikacji) VALUES (?, NULL, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP())");
+        $stmt_sprawdzian = $conn->prepare("INSERT INTO sprawdzian (user_id, ocena,  data_modyfikacji) VALUES (?, NULL, NULL)");
         $stmt_sprawdzian->bind_param("i", $user_id);
         $stmt_sprawdzian->execute();
 
         // Insert record into kartkowka table
-        $stmt_kartkowka = $conn->prepare("INSERT INTO kartkowka (user_id, ocena, data_wystawienia, data_modyfikacji) VALUES (?, NULL, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP())");
+        $stmt_kartkowka = $conn->prepare("INSERT INTO kartkowka (user_id, ocena,  data_modyfikacji) VALUES (?, NULL, NULL)");
         $stmt_kartkowka->bind_param("i", $user_id);
         $stmt_kartkowka->execute();
 
