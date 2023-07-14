@@ -11,24 +11,22 @@ if (isset($_GET['userIdDelete'])) {
         exit();
     }
 
-    // Usunięcie rekordów związanych z użytkownikiem z tabeli "kartkowka"
+
     $deleteKartkowkaSql = "DELETE FROM kartkowka WHERE user_id = $id";
     $conn->query($deleteKartkowkaSql);
 
-    // Usunięcie rekordów związanych z użytkownikiem z tabeli "odpowiedz"
+
     $deleteOdpowiedzSql = "DELETE FROM odpowiedz WHERE user_id = $id";
     $conn->query($deleteOdpowiedzSql);
 
-    // Usunięcie rekordów związanych z użytkownikiem z tabeli "sprawdzian"
     $deleteSprawdzianSql = "DELETE FROM sprawdzian WHERE user_id = $id";
     $conn->query($deleteSprawdzianSql);
 
-    // Usunięcie użytkownika z tabeli "users"
     $deleteUserSql = "DELETE FROM users WHERE id = $id";
     if ($conn->query($deleteUserSql) === TRUE) {
         if ($conn->affected_rows != 0) {
-            unset($_SESSION['users'][$id]); // Usunięcie użytkownika z tablicy $_SESSION['users']
-            // Wyświetlenie komunikatu o usunięciu użytkownika
+            unset($_SESSION['users'][$id]);
+
             echo "<h4>Użytkownik  został usunięty.</h4>";
         } else {
             echo "<h4>Nie udało się usunąć użytkownika.</h4>";

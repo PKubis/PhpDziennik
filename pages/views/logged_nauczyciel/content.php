@@ -114,7 +114,12 @@
                                     <hr> <?php
                                     if (isset($_GET["addUser"])) {
                                         echo <<< ADDUSERFORM
-        <h4>Dodawanie użytkownika</h4><form action="../scripts/add_user.php" method="post"><input type="text" name="imie" placeholder="Podaj imię" autofocus><br><br><input type="text" name="nazwisko" placeholder="Podaj nazwisko"><br><br><input type="password" name="haslo" placeholder="Podaj hasło"><br><br><input type="email" name="email" placeholder="Podaj adres e-mail"><br><br><input type="submit" value="Dodaj użytkownika"></form>
+        <h4>Dodawanie użytkownika</h4><form action="../scripts/add_user.php" method="post">
+        <input type="text" name="imie" placeholder="Podaj imię" autofocus><br><br>
+        <input type="text" name="nazwisko" placeholder="Podaj nazwisko"><br><br>
+        <input type="password" name="haslo" placeholder="Podaj hasło"><br><br>
+        <input type="email" name="email" placeholder="Podaj adres e-mail"><br><br>
+        <input type="submit" value="Dodaj użytkownika"></form>
 ADDUSERFORM;
 
                                     } else if (isset($_GET["userIdUpdate"])) {
@@ -129,7 +134,17 @@ ADDUSERFORM;
                                         $user = $result->fetch_assoc();
 
                                         echo <<< EDITUSERFORM
-        <h4>Aktualizacja użytkownika</h4><form action="../scripts/update_user.php?userIdUpdate=$userId" method="post"><input type="hidden" name="userId" value="$userId"><input type="text" name="imie" placeholder="Podaj imię" value="{$user['firstName']}" readonly><br><br><input type="text" name="nazwisko" placeholder="Podaj nazwisko" value="{$user['lastName']}" readonly><br><br><input type="text" name="ocena_kartkowki" placeholder="Podaj ocenę kartkówki" value="{$user['ocena_kartkowki']}" autofocus><br><br><input type="text" name="ocena_sprawdzianu" placeholder="Podaj ocenę sprawdzianu" value="{$user['ocena_sprawdzianu']}"><br><br><input type="text" name="ocena_odpowiedzi" placeholder="Podaj ocenę odpowiedzi" value="{$user['ocena_odpowiedzi']}"><br><br><input type="email" name="email" placeholder="Podaj adres e-mail" value="{$user['email']}" readonly><br><br><input type="submit" value="Aktualizuj użytkownika" onclick="updateUser()"></form>
+        <h4>Aktualizacja użytkownika
+        </h4><form action="../scripts/update_user.php?userIdUpdate=$userId" method="post">
+        <input type="hidden" name="userId" value="$userId">
+        <input type="text" name="imie" placeholder="Podaj imię" value="{$user['firstName']}" readonly><br><br>
+        <input type="text" name="nazwisko" placeholder="Podaj nazwisko" value="{$user['lastName']}" readonly><br><br>
+        <input type="text" name="ocena_kartkowki" placeholder="Podaj ocenę kartkówki" value="{$user['ocena_kartkowki']}" autofocus><br><br>
+        <input type="text" name="ocena_sprawdzianu" placeholder="Podaj ocenę sprawdzianu" value="{$user['ocena_sprawdzianu']}"><br><br>
+        <input type="text" name="ocena_odpowiedzi" placeholder="Podaj ocenę odpowiedzi" value="{$user['ocena_odpowiedzi']}"><br><br>
+        <input type="email" name="email" placeholder="Podaj adres e-mail" value="{$user['email']}" readonly><br><br>
+        <input type="submit" value="Aktualizuj użytkownika" onclick="updateUser()">
+        </form>
         
 EDITUSERFORM;
                                     }else {

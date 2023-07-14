@@ -17,26 +17,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST["haslo"];
     $email = $_POST["email"];
 
-    // Szyfrowanie hasła
+
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    // Wstawianie nowego użytkownika do bazy danych
+
     $sql = "INSERT INTO users (firstName, lastName, email, password) VALUES ('$firstName', '$lastName', '$email', '$hashedPassword')";
     $conn->query($sql);
 
     if ($conn->affected_rows != 0) {
-        // Pobierz ID nowo wstawionego użytkownika
+
         $userId = $conn->insert_id;
 
-        // Wstawianie nowego rekordu do tabeli "kartkowka"
+
         $kartkowkaSql = "INSERT INTO kartkowka (user_id, data_modyfikacji) VALUES ('$userId', NULL)";
         $conn->query($kartkowkaSql);
 
-        // Wstawianie nowego rekordu do tabeli "sprawdzian"
+
         $sprawdzianSql = "INSERT INTO sprawdzian (user_id, data_modyfikacji) VALUES ('$userId', NULL)";
         $conn->query($sprawdzianSql);
 
-        // Wstawianie nowego rekordu do tabeli "odpowiedz"
+
         $odpowiedzSql = "INSERT INTO odpowiedz (user_id, data_modyfikacji) VALUES ('$userId', NULL)";
         $conn->query($odpowiedzSql);
 
@@ -48,11 +48,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Zapytanie SQL do pobrania danych z tabeli "users"
+
 $sql = "SELECT id, firstName, lastName FROM users";
 $result = $conn->query($sql);
 
-// Wyświetlanie tabeli z użytkownikami
+
 if ($result->num_rows > 0) {
     echo "<table>";
     echo "<tr><th>ID</th><th>Imię</th><th>Nazwisko</th></tr>";

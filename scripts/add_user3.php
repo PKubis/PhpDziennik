@@ -16,10 +16,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nazwisko = $_POST["nazwisko"];
     $haslo = $_POST["haslo"];
     $email = $_POST["email"];
-    $role_id = 3; // Przypisanie roli o ID równym 2
+    $role_id = 3;
     $hashedPassword = password_hash($haslo, PASSWORD_DEFAULT);
 
-    // Tworzenie zapytania SQL do dodania użytkownika
+
     $sql = "INSERT INTO users (firstName, lastName, email, password, role_id) VALUES ('$imie', '$nazwisko', '$email', '$hashedPassword','3')";
     $result = $conn->query($sql);
 
