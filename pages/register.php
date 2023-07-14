@@ -122,6 +122,14 @@ ERROR;
 <!-- /.register-box -->
 
 <!-- jQuery -->
+<style>
+  body {
+    background-image: url('http://localhost/dziennik23/dzienniklekcyjny-master/szkolalog7.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+  }
+</style>
 <script src="../plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
 <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>

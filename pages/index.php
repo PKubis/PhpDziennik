@@ -1,7 +1,5 @@
-
-
 <?php
-  session_start();
+session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,13 +16,21 @@
   <link rel="stylesheet" href="../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="../dist/css/adminlte.min.css">
+  <style>
+    body {
+      background-image: url('http://localhost/dziennik23/dzienniklekcyjny-master/szkolalog7.jpg');
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+    }
+  </style>
 </head>
 <body class="hold-transition login-page">
 
 <div class="login-box">
-	<?php
-	if (isset($_SESSION["success"])){
-	echo <<<ERROR
+  <?php
+  if (isset($_SESSION["success"])){
+    echo <<<ERROR
         <div class="alert alert-success alert-dismissible">
                   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                   <h5><i class="icon fas fa-ban"></i> Gratulacje!</h5>
@@ -33,13 +39,13 @@
 ERROR;
 
 
-		unset($_SESSION["success"]);
-	}
+    unset($_SESSION["success"]);
+  }
 
-    if (isset($_SESSION["error"])) {
-      $_SESSION["error"] = "Błędne hasło lub login ";
+  if (isset($_SESSION["error"])) {
+    $_SESSION["error"] = "Błędne hasło lub login ";
 
-      echo <<<ERROR
+    echo <<<ERROR
         <div class="alert alert-danger alert-dismissible">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
             <h5><i class="icon fas fa-ban"></i> Błąd!</h5>
@@ -47,10 +53,10 @@ ERROR;
         </div>
 ERROR;
 
-      unset($_SESSION["error"]); // Usuwa oryginalną treść zmiennej "error"
-    }
+    unset($_SESSION["error"]); // Usuwa oryginalną treść zmiennej "error"
+  }
 
-    ?>
+  ?>
   <!-- /.login-logo -->
   <div class="card card-outline card-primary">
     <div class="card-header text-center">
@@ -98,7 +104,7 @@ ERROR;
       <!-- /.social-auth-links -->
 
 
-        <a href="register.php" class="text-center">Rejestracja</a>
+      <a href="register.php" class="text-center">Rejestracja</a>
       </p>
     </div>
     <!-- /.card-body -->
